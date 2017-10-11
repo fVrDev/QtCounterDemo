@@ -9,32 +9,103 @@ ApplicationWindow
     height: 480
     title: qsTr("QtCounterDemo")
 
-    property int index: 0
-
-    Label
+    Page
     {
-        id: label
-        anchors.centerIn: parent
-        text: qsTr("No value")
-    }
+        id: mainPage
+        anchors.fill: parent
 
-    Column
-    {
-        anchors.bottom: parent.bottom
-        width: parent.width
+        property int bugs_count: 0
 
-        Button
+        Pane
         {
-            width: parent.width
-            text: qsTr("Inc")
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: tabBar.top
 
-            onClicked: label.text = ++index
+            SwipeView
+            {
+                id: swipeView
+                anchors.fill: parent
+                currentIndex: tabBar.currentIndex
+
+                Item
+                {
+                    width: swipeView.width
+                    height: swipeView.height
+
+                    Column
+                    {
+                        anchors.centerIn: parent
+
+                        Button
+                        {
+                            id: inc
+                            text: "Inc"
+
+                            onClicked: caption.text = ++mainPage.bugs_count
+                        }
+
+                        Label
+                        {
+                            id: caption
+
+                            text: qsTr("No value")
+                        }
+
+                        Button
+                        {
+                            id: dec
+                            text: "Dec"
+
+                            onClicked:
+                            {
+                                mainPage.bugs_count = Math.max(0, mainPage.bugs_count - 1)
+                                caption.text = (mainPage.bugs_count === 0 ) ? caption.text = "No value"
+                                                                            : caption.text = mainPage.bugs_count
+                            }
+                        }
+                    }
+                }
+                Item
+                {
+                    width: swipeView.width
+                    height: swipeView.height
+
+                    Label
+                    {
+                        anchors.centerIn: parent
+                        text: qsTr("Empty")
+                    }
+                }
+
+
+            }
         }
 
-        Button
+        TabBar
         {
+            id: tabBar
+            anchors.bottom: parent.bottom
             width: parent.width
-            text: qsTr("Close")
+            currentIndex: swipeView.currentIndex
+
+            TabButton {
+                text: qsTr("Text")
+            }
+            TabButton {
+                text: qsTr("Visual")
+            }
+        }
+
+        RoundButton
+        {
+            id: close
+            text: "Close"
+            height: width
+
+            anchors.top: parent.top
+            anchors.right: parent.right
 
             onClicked: Qt.quit()
         }
