@@ -5,19 +5,21 @@
 #include <QVector>
 #include <QQmlListProperty>
 
+#include "bug.h"
+
 class BugsScene : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(qreal spaceWidth READ spaceWidth WRITE setSpaceWidth )
     Q_PROPERTY(qreal spaceHeight READ spaceHeight WRITE setSpaceHeight )
-    Q_PROPERTY(QQmlListProperty<class Bug> data READ data NOTIFY on_data)
+    Q_PROPERTY(QQmlListProperty<Bug> data READ data NOTIFY dataChanged)
 
 public:
     explicit BugsScene(QObject *parent = nullptr);
     qreal spaceWidth() const;
     qreal spaceHeight() const;
 
-    QQmlListProperty<class Bug> data();
+    QQmlListProperty<Bug> data();
 
 public slots:
     void setSpaceWidth(qreal spaceWidth);
@@ -26,15 +28,20 @@ public slots:
     void recalc();
 
 signals:
-    void on_data(QQmlListProperty<Bug> data);
+    void dataChanged(QQmlListProperty<Bug> data);
 
 private:
+//    static QQmlListProperty<Bug>::AppendFunction appendF;
+//    static QQmlListProperty<Bug>::AtFunction     atF;
+//    static QQmlListProperty<Bug>::ClearFunction  clearF;
+//    static QQmlListProperty<Bug>::CountFunction  countF;
+
     qreal m_spaceWidth;
     qreal m_spaceHeight;
 
     class QTimer *m_recalcTimer = nullptr;
 
-    QList<QObject*> m_data;
+    QList<Bug*> m_data;
 };
 
 #endif // BUGSSCENE_H

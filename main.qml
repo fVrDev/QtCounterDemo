@@ -34,38 +34,29 @@ ApplicationWindow
                     width: swipeView.width
                     height: swipeView.height
 
-                    Column
+                    MouseArea
                     {
-                        anchors.centerIn: parent
+                        width: parent.width
+                        height: parent.height
 
-                        Button
+                        propagateComposedEvents: true
+
+                        onClicked:
                         {
-                            id: inc
-                            text: "Inc"
-
-                            onClicked: caption.text = ++mainPage.bugs_count
-                        }
-
-                        Label
-                        {
-                            id: caption
-
-                            text: qsTr("No value")
-                        }
-
-                        Button
-                        {
-                            id: dec
-                            text: "Dec"
-
-                            onClicked:
-                            {
-                                mainPage.bugs_count = Math.max(0, mainPage.bugs_count - 1)
-                                caption.text = (mainPage.bugs_count === 0 ) ? caption.text = "No value"
-                                                                            : caption.text = mainPage.bugs_count
-                            }
+                            caption.text = ++mainPage.bugs_count
+                            mouse.accepted = false
                         }
                     }
+
+                    Label
+                    {
+                        id: caption
+
+                        anchors.centerIn: parent
+
+                        text: qsTr("No value")
+                    }
+
                 }
                 Item
                 {
@@ -91,10 +82,10 @@ ApplicationWindow
             currentIndex: swipeView.currentIndex
 
             TabButton {
-                text: qsTr("Text")
+                text: qsTr("Scene")
             }
             TabButton {
-                text: qsTr("Visual")
+                text: qsTr("Stats")
             }
         }
 
