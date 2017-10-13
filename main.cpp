@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<BugsScene>("BugsScene",1,0,"BugsScene");
-    qmlRegisterType<Bug>("Bug",1,0,"Bug");
+    qmlRegisterType<Bug>      ("BugsScene",1,0,"Bug"      );
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));

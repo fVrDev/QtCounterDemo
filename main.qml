@@ -2,7 +2,6 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import BugsScene 1.0
-import Bug 1.0
 
 ApplicationWindow
 {
@@ -73,17 +72,8 @@ ApplicationWindow
                     {
                         model: scene.data
                         delegate:
-                        Rectangle
+                        BugCircle
                         {
-                            id: shape
-                            width: 20
-                            height: 20
-                            color: "red"
-
-                            radius: width/2
-
-                            antialiasing: true
-
                             x: model.ratioX*swipeView.width
                             y: model.ratioY*swipeView.height
                         }
