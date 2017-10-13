@@ -1,6 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import BugsScene 1.0
+import Bug 1.0
 
 ApplicationWindow
 {
@@ -9,12 +11,20 @@ ApplicationWindow
     height: 480
     title: qsTr("QtCounterDemo")
 
+    BugsScene
+    {
+        id: scene
+        spaceHeight: 1000
+        spaceWidth: 1000
+        startSpeed: 150
+
+        onDataChanged: counter.text = count
+    }
+
     Page
     {
         id: mainPage
         anchors.fill: parent
-
-        property int bugs_count: 0
 
         Pane
         {
@@ -43,34 +53,48 @@ ApplicationWindow
 
                         onClicked:
                         {
-                            caption.text = ++mainPage.bugs_count
+                            scene.add()
                             mouse.accepted = false
                         }
                     }
 
                     Label
                     {
-                        id: caption
+                        id: counter
 
                         anchors.centerIn: parent
 
                         text: qsTr("No value")
                     }
 
+
+
+                    Repeater
+                    {
+                        model: scene.data
+                        delegate:
+                        Rectangle
+                        {
+                            id: shape
+                            width: 20
+                            height: 20
+                            color: "red"
+
+                            radius: width/2
+
+                            antialiasing: true
+
+                            x: model.ratioX*swipeView.width
+                            y: model.ratioY*swipeView.height
+                        }
+                    }
                 }
+
                 Item
                 {
                     width: swipeView.width
                     height: swipeView.height
-
-                    Label
-                    {
-                        anchors.centerIn: parent
-                        text: qsTr("Empty")
-                    }
                 }
-
-
             }
         }
 
