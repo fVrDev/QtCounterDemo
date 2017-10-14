@@ -2,6 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>BugCircle.qml</file>
+        <file>BugShape.qml</file>
     </qresource>
 </RCC>

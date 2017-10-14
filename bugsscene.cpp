@@ -60,7 +60,7 @@ void BugsScene::add()
     const qreal startSpeedX = qrand() % (int)(2*startSpeed()) - startSpeed();
     bug->setVelocityX( startSpeedX );
 
-    const qreal startSpeedY = qSqrt( startSpeed()*startSpeed() - startSpeedX*startSpeedX ) * (qrand() % 3 - 1);
+    const qreal startSpeedY = qSqrt( startSpeed()*startSpeed() - startSpeedX*startSpeedX ) * (qrand() % 2 ? 1 : -1);
     bug->setVelocityY( startSpeedY );
 
     emit dataChanged(data());

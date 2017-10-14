@@ -72,7 +72,7 @@ ApplicationWindow
                     {
                         model: scene.data
                         delegate:
-                        BugCircle
+                        BugShape
                         {
                             x: model.ratioX*swipeView.width
                             y: model.ratioY*swipeView.height
