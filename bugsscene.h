@@ -3,39 +3,31 @@
 
 #include <QObject>
 #include <QVector>
-#include <QQmlListProperty>
+#include <QAbstractListModel>
 #include <QTime>
 
 #include "bug.h"
 
-class BugsScene : public QObject
+class BugsScene : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(qreal spaceWidth READ spaceWidth WRITE setSpaceWidth )
-    Q_PROPERTY(qreal spaceHeight READ spaceHeight WRITE setSpaceHeight )
-    Q_PROPERTY(qreal startSpeed READ startSpeed WRITE setStartSpeed )
-    Q_PROPERTY(QQmlListProperty<Bug> data READ data NOTIFY dataChanged)
-    Q_PROPERTY(uint count READ count)
+    Q_PROPERTY(qreal spaceWidth READ spaceWidth WRITE setSpaceWidth NOTIFY spaceWidthChanged )
+    Q_PROPERTY(qreal spaceHeight READ spaceHeight WRITE setSpaceHeight NOTIFY spaceHeightChanged )
+    Q_PROPERTY(qreal startSpeed READ startSpeed WRITE setStartSpeed NOTIFY startSpeedChanged )
 
 public:
     explicit BugsScene(QObject *parent = nullptr);
     qreal spaceWidth() const;
     qreal spaceHeight() const;
-    uint count() const;
     qreal startSpeed() const;
-
-    QQmlListProperty<Bug> data();
 
 public slots:
     void setSpaceWidth(qreal spaceWidth);
     void setSpaceHeight(qreal spaceHeight);
     void setStartSpeed(qreal startSpeed);
     void add();
+    void clear();
     void recalc();
-
-
-signals:
-    void dataChanged(QQmlListProperty<Bug> data);
 
 private:
     qreal m_spaceWidth;
@@ -47,6 +39,22 @@ private:
     QList<Bug*> m_data;
 
     QTime m_lastRecalcTime;
+
+    // QAbstractListModel interface
+public:
+    enum Roles
+    {
+        posX = Qt::UserRole
+        , posY
+    };
+
+    virtual int rowCount(const QModelIndex &parent) const override;
+    virtual QVariant data(const QModelIndex &index, int role) const override;
+    virtual QHash<int, QByteArray> roleNames() const override;
+signals:
+    void spaceWidthChanged(qreal spaceWidth);
+    void spaceHeightChanged(qreal spaceHeight);
+    void startSpeedChanged(qreal startSpeed);
 };
 
 #endif // BUGSSCENE_H

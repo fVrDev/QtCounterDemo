@@ -17,7 +17,7 @@ ApplicationWindow
         spaceWidth: 1000
         startSpeed: 150
 
-        onDataChanged: counter.text = count
+        onDataChanged: counter.text = rowCount()
     }
 
     Page
@@ -70,12 +70,12 @@ ApplicationWindow
 
                     Repeater
                     {
-                        model: scene.data
+                        model: scene
                         delegate:
                         BugShape
                         {
-                            x: model.ratioX*swipeView.width
-                            y: model.ratioY*swipeView.height
+                            x: (model.posX/scene.spaceWidth) * swipeView.width
+                            y: (model.posY/scene.spaceHeight) * swipeView.height
                         }
                     }
                 }

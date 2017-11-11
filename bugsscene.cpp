@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QtMath>
 
-BugsScene::BugsScene(QObject *parent) : QObject(parent)
+BugsScene::BugsScene(QObject *parent) : QAbstractListModel(parent)
 {
     m_recalcTimer = new QTimer(this);
     connect(m_recalcTimer, SIGNAL(timeout()), this, SLOT(recalc()));
@@ -22,16 +22,6 @@ qreal BugsScene::spaceHeight() const
     return m_spaceHeight;
 }
 
-uint BugsScene::count() const
-{
-    return m_data.count();
-}
-
-QQmlListProperty<Bug> BugsScene::data()
-{
-    return QQmlListProperty<Bug>(qobject_cast<QObject *>(this), m_data);
-}
-
 qreal BugsScene::startSpeed() const
 {
     return m_startSpeed;
@@ -40,22 +30,24 @@ qreal BugsScene::startSpeed() const
 void BugsScene::setSpaceWidth(qreal spaceWidth)
 {
     m_spaceWidth = spaceWidth;
+    emit spaceWidthChanged(m_spaceWidth);
 }
 
 void BugsScene::setSpaceHeight(qreal spaceHeight)
 {
     m_spaceHeight = spaceHeight;
+    emit spaceHeightChanged(m_spaceHeight);
 }
 
 void BugsScene::add()
 {
+    beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
+
     m_data.append(new Bug(this));
 
-    auto* bug = qobject_cast<Bug*>(m_data.back());
+    auto* bug = m_data.back();
     bug->setPositionX(spaceWidth()/2.0);
     bug->setPositionY(spaceHeight()/2.0);
-    bug->setRatioX(0.5);
-    bug->setRatioY(0.5);
 
     const qreal startSpeedX = qrand() % (int)(2*startSpeed()) - startSpeed();
     bug->setVelocityX( startSpeedX );
@@ -63,23 +55,27 @@ void BugsScene::add()
     const qreal startSpeedY = qSqrt( startSpeed()*startSpeed() - startSpeedX*startSpeedX ) * (qrand() % 2 ? 1 : -1);
     bug->setVelocityY( startSpeedY );
 
-    emit dataChanged(data());
+    endInsertRows();
+}
+
+void BugsScene::clear()
+{
+    beginRemoveRows(QModelIndex(), 0, m_data.size());
+    m_data.clear();
+    endRemoveRows();
 }
 
 void BugsScene::recalc()
 {
     qreal deltaT = m_lastRecalcTime.msecsTo(QTime::currentTime())/1000.f;
 
-    for( auto* obj : m_data )
+    for( auto* bug : m_data )
     {
-        auto* bug = qobject_cast<Bug*>(obj);
-
         qreal x = bug->positionX() + bug->velocityX() * deltaT;
 
         if( x > 0 && x < spaceWidth() )
         {
             bug->setPositionX(x);
-            bug->setRatioX(x/spaceWidth());
         }
         else
         {
@@ -91,7 +87,6 @@ void BugsScene::recalc()
         if( y > 0 && y < spaceHeight() )
         {
             bug->setPositionY(y);
-            bug->setRatioY(y/spaceHeight());
         }
         else
         {
@@ -101,10 +96,45 @@ void BugsScene::recalc()
 
     m_lastRecalcTime = QTime::currentTime();
 
-    emit dataChanged(data());
+    emit dataChanged(createIndex(0,0), createIndex(m_data.size(),0));
 }
 
 void BugsScene::setStartSpeed(qreal startSpeed)
 {
     m_startSpeed = startSpeed;
+    emit startSpeedChanged(m_startSpeed);
+}
+
+
+int BugsScene::rowCount(const QModelIndex &parent) const
+{
+    return m_data.size();
+}
+
+QVariant BugsScene::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid() && index.row() >= m_data.size())
+    {
+        return QVariant();
+    }
+
+    const auto* bug = m_data[index.row()];
+
+    switch (role)
+    {
+    case posX:
+        return bug->positionX();
+    case posY:
+        return bug->positionY();
+    default:
+        return QVariant();
+    }
+}
+
+QHash<int, QByteArray> BugsScene::roleNames() const
+{
+    auto roles = QAbstractListModel::roleNames();
+    roles[posX] = "posX";
+    roles[posY] = "posY";
+    return roles;
 }

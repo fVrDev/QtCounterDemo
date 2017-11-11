@@ -24,16 +24,6 @@ qreal Bug::velocityY() const
     return m_velocityY;
 }
 
-qreal Bug::ratioX() const
-{
-    return m_ratioX;
-}
-
-qreal Bug::ratioY() const
-{
-    return m_ratioY;
-}
-
 void Bug::setPositionX(qreal val)
 {
     m_positionX = val;
@@ -56,16 +46,4 @@ void Bug::setVelocityY(qreal val)
 {
     m_velocityY = val;
     emit velocityYChanged(m_velocityY);
-}
-
-void Bug::setRatioX(qreal ratioX)
-{
-    m_ratioX = ratioX;
-    emit ratioXChanged(m_ratioX);
-}
-
-void Bug::setRatioY(qreal ratioY)
-{
-    m_ratioY = ratioY;
-    emit ratioYChanged(m_ratioY);
 }
