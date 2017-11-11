@@ -72,7 +72,7 @@ ApplicationWindow
                     {
                         model: scene
                         delegate:
-                        BugShape
+                            BugShape
                         {
                             x: (model.posX/scene.spaceWidth) * swipeView.width
                             y: (model.posY/scene.spaceHeight) * swipeView.height
@@ -108,11 +108,24 @@ ApplicationWindow
             id: close
             text: "Close"
             height: width
+            radius: 25
 
             anchors.top: parent.top
             anchors.right: parent.right
 
             onClicked: Qt.quit()
+        }
+
+        RoundButton
+        {
+            id: clear
+            height: width
+            radius: 25
+            text: "Clear"
+            anchors.right: parent.right
+            anchors.top: close.bottom
+
+            onClicked: scene.clear()
         }
     }
 }
