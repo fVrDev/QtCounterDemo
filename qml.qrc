@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>BugShape.qml</file>
+        <file>AcceptedButton.qml</file>
     </qresource>
 </RCC>

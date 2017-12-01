@@ -122,7 +122,7 @@ ApplicationWindow
             id: close
             text: "Close"
             height: width
-            radius: width/2.0
+            radius: width/2
 
             anchors.top: parent.top
             anchors.right: parent.right
@@ -136,6 +136,7 @@ ApplicationWindow
             text: "Clear"
             anchors.right: parent.right
             anchors.top: close.bottom
+            height: width
 
             onClicked: scene.clear()
         }
