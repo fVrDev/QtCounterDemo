@@ -27,6 +27,7 @@ ApplicationWindow
 
         Pane
         {
+            id: mainPane
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -40,8 +41,7 @@ ApplicationWindow
 
                 Item
                 {
-                    width: swipeView.width
-                    height: swipeView.height
+                    visible: tabBar.currentIndex === 0
 
                     MouseArea
                     {
@@ -82,8 +82,22 @@ ApplicationWindow
 
                 Item
                 {
-                    width: swipeView.width
-                    height: swipeView.height
+                    visible: tabBar.currentIndex === 1
+
+                    ListView
+                    {
+                        model: scene
+                        anchors.fill: parent
+                        spacing: 16
+                        delegate:
+                            Rectangle
+                        {
+                            anchors.horizontalCenter: parent.Center
+                            width: parent.width - 16
+                            height: 64
+                            color: "#9999FF"
+                        }
+                    }
                 }
             }
         }
@@ -108,7 +122,7 @@ ApplicationWindow
             id: close
             text: "Close"
             height: width
-            radius: 25
+            radius: width/2.0
 
             anchors.top: parent.top
             anchors.right: parent.right
@@ -116,11 +130,9 @@ ApplicationWindow
             onClicked: Qt.quit()
         }
 
-        RoundButton
+        AcceptedButton
         {
             id: clear
-            height: width
-            radius: 25
             text: "Clear"
             anchors.right: parent.right
             anchors.top: close.bottom
